@@ -5,7 +5,7 @@ import 'package:minimal_weather/models/weather_model.dart';
 import 'package:http/http.dart' as http;
 
 class WeatherServices {
-  static const BASE_URL =
+  static const baseUrl =
       "https://api.seniverse.com/v3/weather/now.json?key=SsPBMHVuiQSC_wzrR&language=zh-Hans&unit=c";
 
   WeatherServices();
@@ -31,7 +31,7 @@ class WeatherServices {
   }
 
   Future<Weather> getWeather(String cityName) async {
-    final response = await http.get(Uri.parse('$BASE_URL&location=$cityName'));
+    final response = await http.get(Uri.parse('$baseUrl&location=$cityName'));
     switch (response.statusCode) {
       case 200:
         return Weather.fromJson(jsonDecode(response.body));

@@ -35,12 +35,14 @@ class Weather {
   final String temperature;
   final String mainCodition;
   final String lastUpdate;
+  final String code;
 
   Weather(
       {required this.cityName,
       required this.temperature,
       required this.mainCodition,
-      required this.lastUpdate});
+      required this.lastUpdate,
+      required this.code});
 
   factory Weather.fromJson(Map<String, dynamic> json) {
     var result = json['results'][0];
@@ -48,9 +50,52 @@ class Weather {
     var temperature = result['now']['temperature'];
     var text = result['now']['text'];
     var time = result['last_update'];
+    var code = result['now']['code'];
     DateFormat dateFormat = DateFormat('yyyy年MM月dd日 HH 时 mm 分');
     String formattedDate = dateFormat.format(DateTime.parse(time));
     return Weather(
-        cityName: name, temperature: temperature, mainCodition: text, lastUpdate: formattedDate);
+        cityName: name,
+        temperature: temperature,
+        mainCodition: text,
+        lastUpdate: formattedDate,
+        code: code);
+  }
+
+  factory Weather.error() {
+    return Weather(
+        cityName: "获取失败",
+        temperature: "null",
+        mainCodition: "null",
+        lastUpdate: "null",
+        code: "-1");
+  }
+
+  String getWeatherAnimationJSONPath() {
+    // https://seniverse.yuque.com/hyper_data/api_v3/yev2c3
+    String value = "default";
+    switch (int.parse(code)) {
+      case 0:
+      case 1:
+      case 2:
+      case 3:
+        value = "sunny";
+        break;
+      case 34:
+      case 35:
+      case 36:
+        value = "storm";
+        break;
+      case 4:
+      case 32:
+      case 33:
+        value = "windy";
+        break;
+      case 11:
+        value = "thunder";
+        break;
+      default:
+    }
+    print("assets/$value.json");
+    return "assets/$value.json";
   }
 }
